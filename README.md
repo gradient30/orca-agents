@@ -2,9 +2,12 @@
 
 [Orca ADE](https://www.onorca.dev/docs) 官方文档的 1:1 中文手册站点，另附一份面向日常高频操作的「快速手册」。
 
+**在线阅读：** [https://gradient30.github.io/orca-agents/](https://gradient30.github.io/orca-agents/)
+
 - 官方文档：[onorca.dev/docs](https://www.onorca.dev/docs)
 - 英文源：[stablyai/orca](https://github.com/stablyai/orca) `docs/site/content/docs`
 - 本仓库：**非官方**译本与阅读器，命令、产品名、代码块与 `/docs/...` 路径保持与官网一致
+- 发布：GitHub Pages（`main` 推送后自动构建；工作流 `.github/workflows/pages.yml`）
 
 ## 内容
 
@@ -27,11 +30,19 @@ npm install
 npm run dev
 ```
 
-开发服务器默认监听 `0.0.0.0:8080`。生产构建：
+开发服务器默认监听 `0.0.0.0:8080`。生产构建（Vercel）：
 
 ```bash
 npm run build
 ```
+
+GitHub Pages 静态构建：
+
+```bash
+npm run build:pages
+```
+
+产物在 `.output/public`。
 
 ## 技术栈
 
