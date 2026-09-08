@@ -1,0 +1,21 @@
+# deps & build
+node_modules/
+.tanstack/
+.vercel/
+.nitro/
+.output/
+dist/
+*.log
+
+# sandbox / preview internals — not part of the handbook
+.grok/
+.project_id
+.node_modules.lock
+artifacts/
+screenshots/
+attachments/
+public/__grok/
+AGENTS.md
+
+# OS
+.DS_Store

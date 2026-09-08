@@ -1,0 +1,42 @@
+# Orca 中文使用手册
+
+[Orca ADE](https://www.onorca.dev/docs) 官方文档的 1:1 中文手册站点，另附一份面向日常高频操作的「快速手册」。
+
+- 官方文档：[onorca.dev/docs](https://www.onorca.dev/docs)
+- 英文源：[stablyai/orca](https://github.com/stablyai/orca) `docs/site/content/docs`
+- 本仓库：**非官方**译本与阅读器，命令、产品名、代码块与 `/docs/...` 路径保持与官网一致
+
+## 内容
+
+| 部分 | 说明 |
+| --- | --- |
+| 官网 57 页 1:1 | 安装、工作树、Agent、CLI、评审、浏览器、远程……完整目录与英文锚点 `{#id}` |
+| [快速手册](src/content/zh/quick-guide.md) | 引导介绍、核心特性、日常高频：用法 / 真实示例 / 应用场景 / 价值收益 |
+| 首页 | 官网「Orca 是什么？」；页内入口指向快速手册 |
+
+常用入口：
+
+- `/` — 官网首页译本
+- `/docs/quick-guide` — 快速手册（QASai / qasai-probes 双仓执行+复核流程也写在这里）
+- `/docs/install`、`/docs/model/worktrees`、`/docs/agents/hibernation` 等与官网路径对齐
+
+## 本地运行
+
+```bash
+npm install
+npm run dev
+```
+
+开发服务器默认监听 `0.0.0.0:8080`。生产构建：
+
+```bash
+npm run build
+```
+
+## 技术栈
+
+TanStack Start + Vite + Tailwind v4。正文是 `src/content/zh/**/*.md`，由 `src/lib/docs/catalog.ts` 建目录、`src/components/docs/Markdown.tsx` 渲染（标题 `{#english-id}`、表格、代码、哈希滚动）。
+
+## 许可与归属
+
+Orca / Orca ADE 是 [Stably](https://www.onorca.dev) 的产品。本仓库仅提供中文阅读与日常速查，不替代官方文档。
