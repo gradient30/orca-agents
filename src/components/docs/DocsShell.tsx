@@ -5,6 +5,9 @@ import { cn } from "@/lib/cn";
 import { NAV, neighbors, pageBySlug, type DocLink, type NavNode } from "@/lib/docs/catalog";
 import { getMarkdown, searchDocs } from "@/lib/docs/load";
 import { extractToc, Markdown } from "./Markdown";
+import { ThemeSwitch } from "./ThemeSwitch";
+import { UpdateEntry } from "./UpdateEntry";
+import { readStoredTheme } from "@/lib/theme";
 
 function hrefFor(slug: string) {
   return slug === "index" ? "/" : `/docs/${slug}`;
@@ -97,7 +100,7 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center bg-bg/70 px-3 pt-[12vh]" onClick={onClose}>
       <div
-        className="w-full max-w-xl overflow-hidden rounded-lg border border-border bg-bg-elevated shadow-[0_24px_80px_rgba(0,0,0,0.45)]"
+        className="w-full max-w-xl overflow-hidden rounded-lg border border-border bg-bg-elevated shadow-overlay"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-2 border-b border-border px-3">
@@ -146,6 +149,7 @@ export function DocsShell({ slug }: { slug: string }) {
   const { prev, next } = neighbors(slug);
   const [drawer, setDrawer] = useState(false);
   const [search, setSearch] = useState(false);
+  const [colorful, setColorful] = useState(false);
   const hash = useRouterState({ select: (s) => s.location.hash });
 
   useEffect(() => {
@@ -178,31 +182,46 @@ export function DocsShell({ slug }: { slug: string }) {
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
 
+  useEffect(() => {
+    const sync = () => setColorful(readStoredTheme() === "color");
+    sync();
+    const observer = new MutationObserver(sync);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="min-h-svh bg-bg text-fg">
-      <header className="sticky top-0 z-40 flex h-12 items-center gap-3 border-b border-border bg-bg/90 px-3 backdrop-blur-md md:px-4">
+    <div className="min-h-svh overflow-x-hidden bg-bg text-fg">
+      <header
+        className={cn(
+          "sticky top-0 z-40 flex h-12 items-center gap-2 overflow-visible border-b bg-bg/90 px-2 backdrop-blur-md sm:gap-3 sm:px-3 md:px-4",
+          colorful ? "border-accent" : "border-border",
+        )}
+      >
         <button
           type="button"
-          className="flex size-11 items-center justify-center rounded-sm text-fg-muted hover:bg-bg-subtle md:hidden"
+          className="flex size-11 shrink-0 items-center justify-center rounded-sm text-fg-muted hover:bg-bg-subtle md:hidden"
           onClick={() => setDrawer(true)}
           aria-label="打开目录"
         >
           <Menu className="size-5" />
         </button>
-        <Link to="/" className="flex items-center gap-2">
-          <span className="flex size-7 items-center justify-center rounded-sm border border-border bg-bg-elevated">
+        <Link to="/" className="flex min-w-0 items-center gap-2">
+          <span className="flex size-7 shrink-0 items-center justify-center rounded-sm border border-border bg-bg-elevated">
             <svg viewBox="0 0 24 24" className="size-4 text-accent" fill="currentColor" aria-hidden>
               <path d="M4 14c2-6 6-9 10-9 5 0 8 3 8 7-2 1-4 1-6 0-1 3-4 5-7 5-3 0-4-1-5-3z" />
             </svg>
           </span>
-          <span className="font-medium tracking-tight">Orca 手册</span>
+          <span className="hidden truncate font-medium tracking-tight sm:inline">Orca 手册</span>
         </Link>
-        <span className="hidden text-xs text-fg-subtle sm:inline">官方文档中文版</span>
-        <div className="ml-auto flex items-center gap-2">
+        <span className="hidden text-xs text-fg-subtle lg:inline">官方文档中文版</span>
+        <div className="ml-auto flex min-w-0 items-center gap-1.5 sm:gap-2">
+          <UpdateEntry />
+          <ThemeSwitch />
           <button
             type="button"
             onClick={() => setSearch(true)}
-            className="flex h-11 items-center gap-2 rounded-md border border-border bg-bg-elevated px-3 text-xs text-fg-subtle hover:text-fg"
+            className="flex size-11 shrink-0 items-center justify-center gap-2 rounded-md border border-border bg-bg-elevated text-xs text-fg-subtle hover:text-fg sm:h-11 sm:w-auto sm:px-3"
           >
             <Search className="size-3.5" />
             <span className="hidden sm:inline">搜索</span>
@@ -212,7 +231,7 @@ export function DocsShell({ slug }: { slug: string }) {
             href="https://www.onorca.dev/docs"
             target="_blank"
             rel="noreferrer"
-            className="hidden h-11 items-center rounded-md px-2 text-xs text-fg-subtle hover:text-fg sm:flex"
+            className="hidden h-11 items-center rounded-md px-2 text-xs text-fg-subtle hover:text-fg lg:flex"
           >
             英文原文
           </a>

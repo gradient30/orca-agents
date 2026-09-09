@@ -1,25 +1,88 @@
 @import "tailwindcss";
 
+:root,
+html[data-theme="dark"] {
+  --app-bg: #0c0e12;
+  --app-bg-elevated: #141820;
+  --app-bg-subtle: #1a1f28;
+  --app-fg: #e8edf4;
+  --app-fg-muted: #93a0b3;
+  --app-fg-subtle: #6d7a8d;
+  --app-border: #2a3340;
+  --app-border-strong: #3d4a5c;
+  --app-accent: #8fb4c8;
+  --app-accent-fg: #0c0e12;
+  --app-card: #12161c;
+  --app-primary: #8fb4c8;
+  --app-primary-foreground: #0c0e12;
+  --app-ring: #8fb4c8;
+  --app-destructive: #d07a7a;
+  --app-overlay: 0 24px 80px color-mix(in oklab, black 45%, transparent);
+  color-scheme: dark;
+}
+
+html[data-theme="light"] {
+  --app-bg: #f4f5f7;
+  --app-bg-elevated: #ffffff;
+  --app-bg-subtle: #e8ebf0;
+  --app-fg: #1a1e24;
+  --app-fg-muted: #4e5968;
+  --app-fg-subtle: #6d7785;
+  --app-border: #d5dae2;
+  --app-border-strong: #b4bcc8;
+  --app-accent: #3d6b82;
+  --app-accent-fg: #ffffff;
+  --app-card: #ffffff;
+  --app-primary: #3d6b82;
+  --app-primary-foreground: #ffffff;
+  --app-ring: #3d6b82;
+  --app-destructive: #b42318;
+  --app-overlay: 0 20px 56px color-mix(in oklab, black 14%, transparent);
+  color-scheme: light;
+}
+
+html[data-theme="color"] {
+  --app-bg: #f3ead9;
+  --app-bg-elevated: #fff8ec;
+  --app-bg-subtle: #e8d7bf;
+  --app-fg: #1a2e2b;
+  --app-fg-muted: #4a635c;
+  --app-fg-subtle: #6d837d;
+  --app-border: #d4c0a4;
+  --app-border-strong: #b89a74;
+  --app-accent: #c24e2c;
+  --app-accent-fg: #fff8ec;
+  --app-card: #fff8ec;
+  --app-primary: #c24e2c;
+  --app-primary-foreground: #fff8ec;
+  --app-ring: #0f7a6c;
+  --app-destructive: #b42318;
+  --app-overlay: 0 20px 56px color-mix(in oklab, #3a2416 22%, transparent);
+  color-scheme: light;
+}
+
 @theme {
   --font-sans: "IBM Plex Sans", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", "Noto Sans Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --font-display: "IBM Plex Sans", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
 
-  --color-bg: #0c0e12;
-  --color-bg-elevated: #141820;
-  --color-bg-subtle: #1a1f28;
-  --color-fg: #e8edf4;
-  --color-fg-muted: #93a0b3;
-  --color-fg-subtle: #6d7a8d;
-  --color-border: #2a3340;
-  --color-border-strong: #3d4a5c;
-  --color-accent: #8fb4c8;
-  --color-accent-fg: #0c0e12;
-  --color-card: #12161c;
-  --color-primary: #8fb4c8;
-  --color-primary-foreground: #0c0e12;
-  --color-ring: #8fb4c8;
-  --color-destructive: #d07a7a;
+  --color-bg: var(--app-bg);
+  --color-bg-elevated: var(--app-bg-elevated);
+  --color-bg-subtle: var(--app-bg-subtle);
+  --color-fg: var(--app-fg);
+  --color-fg-muted: var(--app-fg-muted);
+  --color-fg-subtle: var(--app-fg-subtle);
+  --color-border: var(--app-border);
+  --color-border-strong: var(--app-border-strong);
+  --color-accent: var(--app-accent);
+  --color-accent-fg: var(--app-accent-fg);
+  --color-card: var(--app-card);
+  --color-primary: var(--app-primary);
+  --color-primary-foreground: var(--app-primary-foreground);
+  --color-ring: var(--app-ring);
+  --color-destructive: var(--app-destructive);
+
+  --shadow-overlay: var(--app-overlay);
 
   --radius-xs: 4px;
   --radius-sm: 8px;
@@ -36,6 +99,15 @@
     color: var(--color-fg);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html[data-theme="color"] body {
+    background-image: radial-gradient(
+      900px 420px at 8% -8%,
+      color-mix(in oklab, var(--color-accent) 10%, transparent),
+      transparent 70%
+    );
   }
 
   button:not(:disabled),

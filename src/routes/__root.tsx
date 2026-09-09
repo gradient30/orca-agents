@@ -7,6 +7,8 @@ const APP_NAME = "Orca 中文使用手册";
 const BASE = import.meta.env.BASE_URL || "/";
 const IS_PAGES = BASE !== "/";
 
+const THEME_BOOT = `(function(){try{var t=localStorage.getItem("orca-handbook-theme");if(t!=="light"&&t!=="dark"&&t!=="color")t="dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();`;
+
 export const Route = createRootRoute({
   head: () => ({
     meta: [
@@ -35,8 +37,9 @@ export const Route = createRootRoute({
     ],
   }),
   component: () => (
-    <html lang="zh-CN" suppressHydrationWarning>
+    <html lang="zh-CN" data-theme="dark" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
         <HeadContent />
       </head>
       <body>

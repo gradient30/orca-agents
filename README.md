@@ -8,6 +8,8 @@
 - 英文源：[stablyai/orca](https://github.com/stablyai/orca) `docs/site/content/docs`
 - 本仓库：**非官方**译本与阅读器，命令、产品名、代码块与 `/docs/...` 路径保持与官网一致
 - 发布：GitHub Pages（`main` 推送后自动构建；工作流 `.github/workflows/pages.yml`）
+- 顶栏「更新」入口：摘录官方 [Releases](https://github.com/stablyai/orca/releases) 最近 3 次 Notable changes（中文）
+- 风格：明 / 暗 / 彩，切换结果保存在浏览器本地
 
 ## 内容
 
