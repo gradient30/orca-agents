@@ -5,9 +5,10 @@ export type ReleaseNote = {
   title: string;
   highlights: string[];
   url: string;
+  href: string;
 };
 
-/** Latest 3 desktop releases, translated from official Notable changes. */
+/** Latest 3 desktop releases. Highlights = 核心摘要; href = 完整中文页锚点. */
 export const RELEASES: ReleaseNote[] = [
   {
     tag: "v1.4.198",
@@ -20,6 +21,7 @@ export const RELEASES: ReleaseNote[] = [
       "工作区、渲染器、编辑器、终端、Git 与远程操作更快；SSH 中继和 Windows/WSL 恢复更稳。",
     ],
     url: "https://github.com/stablyai/orca/releases/tag/v1.4.198",
+    href: "/docs/changelog#v1-4-198",
   },
   {
     tag: "v1.4.197",
@@ -29,9 +31,10 @@ export const RELEASES: ReleaseNote[] = [
     highlights: [
       "本地与远程工作区的 worktree、渲染器、编辑器、浏览器、终端和 Git 操作更快。",
       "Agent 会话、Native Chat、SSH 中继恢复以及 Windows/WSL 执行更抗故障。",
-      "工作区、终端、CLI、云端与跨平台可靠性进一步增强。",
+      "可从操作系统把 Markdown 打开到浮动工作区；工作区、终端、CLI 与云端更稳。",
     ],
     url: "https://github.com/stablyai/orca/releases/tag/v1.4.197",
+    href: "/docs/changelog#v1-4-197",
   },
   {
     tag: "v1.4.196",
@@ -44,9 +47,12 @@ export const RELEASES: ReleaseNote[] = [
       "SSH、Windows/WSL、GitLab、更新器、启动与发布流程的可靠性覆盖更广。",
     ],
     url: "https://github.com/stablyai/orca/releases/tag/v1.4.196",
+    href: "/docs/changelog#v1-4-196",
   },
 ];
 
 export const RELEASES_INDEX_URL = "https://github.com/stablyai/orca/releases";
 
 export const LATEST_RELEASE = RELEASES[0]!;
+
+export const CHANGELOG_HREF = "/docs/changelog";

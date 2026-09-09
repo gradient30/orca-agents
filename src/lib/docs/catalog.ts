@@ -17,6 +17,12 @@ export const PAGES: DocLink[] = [
     description: "核心能力与日常最高频用法：真实示例、场景和收益。",
     href: "/docs/quick-guide",
   },
+  {
+    slug: "changelog",
+    title: "更新日志",
+    description: "官方最近三次 Release 的完整中文译本，顶栏「更新」点进来。",
+    href: "/docs/changelog",
+  },
   { slug: "index", title: "Orca 是什么？", description: "60 秒说明：Orca 为谁而做、何时该用。", href: "/" },
   { slug: "install", title: "安装", description: "下载 macOS、Windows 或 Linux 版本，并可选加入 RC 构建。", href: "/docs/install" },
   { slug: "first-session", title: "第一次三 Agent 会话", description: "从空应用到三个 Agent 并行，五分钟内发出一个 PR。", href: "/docs/first-session" },
@@ -79,6 +85,7 @@ export const PAGES: DocLink[] = [
 export const NAV: NavNode[] = [
   { kind: "label", title: "从这里开始" },
   { kind: "link", slug: "quick-guide", title: "快速手册", href: "/docs/quick-guide" },
+  { kind: "link", slug: "changelog", title: "更新日志", href: "/docs/changelog" },
   { kind: "link", slug: "index", title: "Orca 是什么？", href: "/" },
   { kind: "link", slug: "install", title: "安装", href: "/docs/install" },
   { kind: "link", slug: "first-session", title: "第一次三 Agent 会话", href: "/docs/first-session" },
