@@ -20,7 +20,7 @@ export const PAGES: DocLink[] = [
   {
     slug: "changelog",
     title: "更新日志",
-    description: "官方最近三次 Release 的完整中文译本，顶栏「更新」点进来。",
+    description: "自动抓取官方最近三次 Release，译成完整中文日志。",
     href: "/docs/changelog",
   },
   { slug: "index", title: "Orca 是什么？", description: "60 秒说明：Orca 为谁而做、何时该用。", href: "/" },

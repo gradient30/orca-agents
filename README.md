@@ -8,7 +8,8 @@
 - 英文源：[stablyai/orca](https://github.com/stablyai/orca) `docs/site/content/docs`
 - 本仓库：**非官方**译本与阅读器，命令、产品名、代码块与 `/docs/...` 路径保持与官网一致
 - 发布：GitHub Pages（`main` 推送后自动构建；工作流 `.github/workflows/pages.yml`）
-- 顶栏「更新」入口：最近 3 次官方 Release 的核心摘要；点击进入[完整中文日志](src/content/zh/changelog.md)
+- 顶栏「更新」：打开手册时自动抓取官方 [Releases](https://github.com/stablyai/orca/releases) 最近 3 次桌面版（跳过 mobile / 预发布），译成中文；点进去是[完整日志](src/content/zh/changelog.md)。结果在浏览器缓存 6 小时
+- 仓库每 6 小时用 GitHub Actions 核对官方 tag，有新版本才回写内置译本
 - 风格：明 / 暗 / 彩，切换结果保存在浏览器本地
 
 ## 内容
@@ -17,12 +18,13 @@
 | --- | --- |
 | 官网 57 页 1:1 | 安装、工作树、Agent、CLI、评审、浏览器、远程……完整目录与英文锚点 `{#id}` |
 | [快速手册](src/content/zh/quick-guide.md) | 引导介绍、核心特性、日常高频：用法 / 真实示例 / 应用场景 / 价值收益 |
-| [更新日志](src/content/zh/changelog.md) | 官方最近三次 Release 全文中文译本（v1.4.198 / 197 / 196） |
+| [更新日志](src/content/zh/changelog.md) | 打开时抓取官方最新三次 Release 的完整中文译本 |
 
 常用入口：
 
 - `/` — 官网首页译本
 - `/docs/quick-guide` — 快速手册（QASai / qasai-probes 双仓执行+复核流程也写在这里）
+- `/docs/changelog` — 更新日志（顶栏「更新」进入）
 - `/docs/install`、`/docs/model/worktrees`、`/docs/agents/hibernation` 等与官网路径对齐
 
 ## 本地运行
@@ -42,6 +44,12 @@ GitHub Pages 静态构建：
 
 ```bash
 npm run build:pages
+```
+
+同步官方 Release 底稿：
+
+```bash
+npm run sync:releases
 ```
 
 产物在 `.output/public`。

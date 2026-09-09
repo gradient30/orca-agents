@@ -1,0 +1,42 @@
+name: Sync Orca Releases
+
+# Pages workflow already syncs on a 6-hour cron. This is the manual "just rewrite
+# the Chinese fallback" path (and a fallback if Pages did not run).
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Rewrite even if the top-3 tags are unchanged"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-releases
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --experimental-strip-types scripts/sync-releases.ts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FORCE_SYNC: ${{ inputs.force && '1' || '' }}
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/lib/docs/releases.ts src/content/zh/changelog.md
+          if git diff --cached --quiet; then
+            echo "no release changes"
+            exit 0
+          fi
+          git commit -m "chore: 同步官方最新 Orca Release"
+          git push

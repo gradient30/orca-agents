@@ -8,6 +8,7 @@ import { extractToc, Markdown } from "./Markdown";
 import { ThemeSwitch } from "./ThemeSwitch";
 import { UpdateEntry } from "./UpdateEntry";
 import { readStoredTheme } from "@/lib/theme";
+import { useOrcaReleases } from "@/lib/docs/use-releases";
 
 function hrefFor(slug: string) {
   return slug === "index" ? "/" : `/docs/${slug}`;
@@ -144,7 +145,9 @@ function scrollToHash(raw: string) {
 
 export function DocsShell({ slug }: { slug: string }) {
   const page = pageBySlug(slug);
-  const md = getMarkdown(slug) ?? `# 未找到\n\n该章节尚未载入。`;
+  const baked = getMarkdown(slug) ?? `# 未找到\n\n该章节尚未载入。`;
+  const live = useOrcaReleases();
+  const md = slug === "changelog" && live.markdown ? live.markdown : baked;
   const toc = useMemo(() => extractToc(md), [md]);
   const { prev, next } = neighbors(slug);
   const [drawer, setDrawer] = useState(false);
@@ -260,6 +263,19 @@ export function DocsShell({ slug }: { slug: string }) {
 
         <main className="min-w-0 flex-1 px-4 py-8 sm:px-8 lg:px-10">
           {page ? <p className="text-xs tracking-wide text-fg-subtle">{page.description}</p> : null}
+          {slug === "changelog" ? (
+            <p className="mt-1 text-xs text-fg-subtle" data-release-source={live.source}>
+              {live.source === "live"
+                ? `已自动抓取官方 Releases · 当前 ${live.latestTag}`
+                : live.source === "cache"
+                  ? `本机缓存（6 小时内）· 当前 ${live.latestTag}`
+                  : live.loading
+                    ? "正在同步官方最新 Release…"
+                    : live.error
+                      ? "官方源暂时不可用，先显示内置译本"
+                      : "尚未连上官方源，先显示内置译本"}
+            </p>
+          ) : null}
           <Markdown source={md} />
           <Pager prev={prev} next={next} current={slug} />
         </main>

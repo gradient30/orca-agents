@@ -1,6 +1,6 @@
 # 更新日志 {#changelog}
 
-顶栏「更新」先给出最近三次的核心摘要；本页是对应官方 [Releases](https://github.com/stablyai/orca/releases) 的**完整中文译本**。命令、产品名、模块 scope 与 PR 编号保持英文，便于对照原文。
+顶栏「更新」显示最近三次核心摘要；本页在打开时**自动抓取**官方 [Releases](https://github.com/stablyai/orca/releases)，并译成中文。命令、产品名、模块 scope 与 PR 编号保持英文。
 
 > 非官方译本。条目来自 `stablyai/orca` 各 tag 的 Release notes；合入到发版通常还需 48–72 小时。
 

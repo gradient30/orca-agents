@@ -4,9 +4,14 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_run:
+    workflows: ["Sync Orca Releases"]
+    types: [completed]
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -16,6 +21,7 @@ concurrency:
 
 jobs:
   build:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     env:
       GITHUB_PAGES: "1"
@@ -27,6 +33,21 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm install --no-audit --no-fund
+      - name: Sync official Orca Releases
+        run: node --experimental-strip-types scripts/sync-releases.ts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit synced fallback if tags moved
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/lib/docs/releases.ts src/content/zh/changelog.md
+          if git diff --cached --quiet; then
+            echo "no release changes"
+            exit 0
+          fi
+          git commit -m "chore: 同步官方最新 Orca Release"
+          git push
       - run: npm run build:pages
       - uses: actions/upload-pages-artifact@v3
         with:
