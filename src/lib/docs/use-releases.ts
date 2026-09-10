@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { fetchDesktopReleases, type LiveRelease } from "./github-releases";
 import { RELEASES, type ReleaseNote } from "./releases";
-import { buildChangelogMarkdown, toReleaseNote } from "./translate-release";
+import { getMarkdown } from "./load";
+import { buildChangelogMarkdown, extractVersionSection, toReleaseNote } from "./translate-release";
 
-const CACHE_KEY = "orca-handbook-releases-v1";
+const CACHE_KEY = "orca-handbook-releases-v2";
 const TTL_MS = 6 * 60 * 60 * 1000;
 
 export type ReleasesState = {
@@ -34,14 +35,6 @@ function emit() {
   for (const fn of listeners) fn(snapshot);
 }
 
-function tagsKey(tags: string[]) {
-  return tags.join(",");
-}
-
-function sameAsBaked(releases: LiveRelease[]) {
-  return tagsKey(releases.map((r) => r.tag)) === tagsKey(RELEASES.map((r) => r.tag));
-}
-
 function readCache(): CacheShape | null {
   try {
     const raw = localStorage.getItem(CACHE_KEY);
@@ -63,11 +56,12 @@ function writeCache(releases: LiveRelease[]) {
 }
 
 function applyFrom(releases: LiveRelease[], source: "cache" | "live", at: number) {
-  const unchanged = sameAsBaked(releases);
+  const existing = getMarkdown("changelog") ?? "";
+  const allBaked = releases.every((r) => !!extractVersionSection(existing, r.tag));
   snapshot = {
-    notes: unchanged ? RELEASES : releases.map(toReleaseNote),
-    // Keep the hand-tuned Chinese page when the official top-3 tags have not moved.
-    markdown: unchanged ? null : buildChangelogMarkdown(releases),
+    notes: releases.map((r) => RELEASES.find((n) => n.tag === r.tag) ?? toReleaseNote(r)),
+    // Prefer the hand-tuned Chinese page whenever every live tag already has a baked section.
+    markdown: allBaked ? null : buildChangelogMarkdown(releases, existing, RELEASES),
     latestTag: releases[0]?.tag ?? snapshot.latestTag,
     source,
     syncedAt: new Date(at).toISOString(),

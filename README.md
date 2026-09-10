@@ -8,7 +8,7 @@
 - 英文源：[stablyai/orca](https://github.com/stablyai/orca) `docs/site/content/docs`
 - 本仓库：**非官方**译本与阅读器，命令、产品名、代码块与 `/docs/...` 路径保持与官网一致
 - 发布：GitHub Pages（`main` 推送后自动构建；工作流 `.github/workflows/pages.yml`）
-- 顶栏「更新」：打开手册时自动抓取官方 [Releases](https://github.com/stablyai/orca/releases) 最近 3 次桌面版（跳过 mobile / 预发布），译成中文；点进去是[完整日志](src/content/zh/changelog.md)。结果在浏览器缓存 6 小时
+- 顶栏「更新」：打开手册时自动抓取官方 [Releases](https://github.com/stablyai/orca/releases) 最近 3 次桌面版（跳过 mobile / 预发布），译成中文；点进去是[完整日志](src/content/zh/changelog.md)。结果在浏览器缓存 6 小时。已有中文底稿的版本不会被英文机翻覆盖。
 - 仓库每 6 小时用 GitHub Actions 核对官方 tag，有新版本才回写内置译本
 - 风格：明 / 暗 / 彩，切换结果保存在浏览器本地
 

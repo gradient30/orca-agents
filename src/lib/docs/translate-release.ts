@@ -2,6 +2,7 @@ import type { LiveRelease } from "./github-releases";
 import type { ReleaseNote } from "./releases";
 
 const HEADINGS: Record<string, string> = {
+  "The short version": "简要说明",
   "Notable changes": "重点变化",
   "Product experience": "产品体验",
   "Workspaces & projects": "工作区与项目",
@@ -88,6 +89,14 @@ const PHRASES: [string, string][] = [
     "Broader SSH, Windows/WSL, GitLab, updater, startup, and release reliability improvements.",
     "SSH、Windows/WSL、GitLab、更新器、启动与发布流程的可靠性覆盖更广。",
   ],
+  [
+    "Add project is back where you can find it.",
+    "「Add project」又回到你找得到的地方了。",
+  ],
+  ["Structured chat grew up.", "Structured Chat 更成熟了。"],
+  ["Remote work holds on better.", "远程工作更稳了。"],
+  ["It's quicker.", "更快了。"],
+  ["Two things were pulled.", "有两项被撤回。"],
   ["made their first contribution in", "首次贡献于"],
   ["inline file diffs", "行内文件 diff"],
   ["native chat", "Native Chat"],
@@ -229,6 +238,7 @@ function headingZh(text: string, level: number, tag: string): string {
   const key =
     {
       重点变化: "notable",
+      简要说明: "short",
       产品体验: "product",
       工作区与项目: "workspaces",
       "编辑器、浏览器与界面": "editor-ui",
@@ -258,7 +268,21 @@ function headingZh(text: string, level: number, tag: string): string {
 
 export function extractHighlights(body: string): string[] {
   const lines = body.replace(/\r\n/g, "\n").split("\n");
-  const start = lines.findIndex((l) => /^##\s+Notable changes/i.test(l));
+  const short = lines.findIndex((l) => /^##\s+(The short version|简要说明)/i.test(l));
+  const notable = lines.findIndex((l) => /^##\s+(Notable changes|重点变化)/i.test(l));
+  if (short >= 0 && (notable < 0 || short < notable)) {
+    const out: string[] = [];
+    for (const line of lines.slice(short + 1)) {
+      if (/^##\s+/.test(line)) break;
+      const m = /^\*\*(.+?)\*\*\s*(.*)$/.exec(line.trim());
+      if (!m) continue;
+      const lead = translateProse(m[1]!.trim());
+      out.push(lead);
+      if (out.length >= 3) break;
+    }
+    if (out.length) return out;
+  }
+  const start = notable >= 0 ? notable : -1;
   const slice = start >= 0 ? lines.slice(start + 1) : lines;
   const out: string[] = [];
   for (const line of slice) {
@@ -300,6 +324,17 @@ function translateBody(rel: LiveRelease): string[] {
       if (out.at(-1) !== "") out.push("");
       continue;
     }
+    if (s.startsWith("<details") || s === "</details>") continue;
+    if (s.startsWith("<summary>")) {
+      const inner = s
+        .replace(/<\/?summary>/gi, "")
+        .replace(/<\/?b>/gi, "")
+        .replace(/\s*—\s*\d+\s*PRs?/i, "")
+        .trim();
+      out.push(headingZh(inner, 4, id));
+      out.push("");
+      continue;
+    }
     if (s.startsWith("**Full Changelog**") || s.startsWith("**完整变更对照**")) {
       const m = s.match(/https:\/\/github\.com\/stablyai\/orca\/compare\/\S+/);
       const url = (m?.[0] ?? "").replace(/[.)]+$/, "");
@@ -317,6 +352,16 @@ function translateBody(rel: LiveRelease): string[] {
       out.push("");
       continue;
     }
+    if (/^\*[^*].*\*$/.test(s) && !s.startsWith("* ")) {
+      out.push(`> ${translateProse(s.slice(1, -1).trim())}`);
+      out.push("");
+      continue;
+    }
+    if (/^\*\*[^*].*\*\*$/.test(s)) {
+      out.push(`**${translateProse(s.slice(2, -2).trim())}**`);
+      out.push("");
+      continue;
+    }
     if (s.startsWith("* ")) {
       out.push(translateItem(s));
       continue;
@@ -327,15 +372,35 @@ function translateBody(rel: LiveRelease): string[] {
   return out;
 }
 
-export function buildChangelogMarkdown(releases: LiveRelease[]): string {
-  const notes = releases.map(toReleaseNote);
+/** Pull a baked `## vX.Y.Z …` section out of changelog.md so live fetch cannot un-translate it. */
+export function extractVersionSection(md: string, tag: string): string | null {
+  const escaped = tag.replace(/\./g, "\\.");
+  const re = new RegExp(`^## ${escaped} .+$`, "m");
+  const m = re.exec(md);
+  if (!m || m.index === undefined) return null;
+  const start = m.index;
+  const rest = md.slice(start + m[0].length);
+  const next = rest.search(/^## v\d+\.\d+\.\d+ /m);
+  const section = next < 0 ? md.slice(start) : md.slice(start, start + m[0].length + next);
+  return section.trim();
+}
+
+export function buildChangelogMarkdown(
+  releases: LiveRelease[],
+  existingMd = "",
+  bakedNotes: ReleaseNote[] = [],
+): string {
+  const notes = releases.map((rel) => bakedNotes.find((n) => n.tag === rel.tag) ?? toReleaseNote(rel));
   const parts: string[] = [];
   parts.push("# 更新日志 {#changelog}", "");
   parts.push(
     "顶栏「更新」显示最近三次核心摘要；本页在打开时**自动抓取**官方 [Releases](https://github.com/stablyai/orca/releases)，并译成中文。命令、产品名、模块 scope 与 PR 编号保持英文。",
     "",
   );
-  parts.push("> 非官方译本。数据源：`stablyai/orca` 的 GitHub Releases（跳过 mobile / android 与预发布）。", "");
+  parts.push(
+    "> 非官方译本。数据源：`stablyai/orca` 的 GitHub Releases（跳过 mobile / android 与预发布）。已有中文底稿的版本不会被英文机翻覆盖。",
+    "",
+  );
   parts.push("## 核心摘要 {#highlights}", "");
   parts.push("| 版本 | 日期 | 一句话 |", "| --- | --- | --- |");
   for (const n of notes) {
@@ -351,7 +416,12 @@ export function buildChangelogMarkdown(releases: LiveRelease[]): string {
   }
   parts.push("## 完整中文日志 {#full-notes}", "");
   for (const rel of releases) {
-    const note = toReleaseNote(rel);
+    const baked = existingMd ? extractVersionSection(existingMd, rel.tag) : null;
+    if (baked) {
+      parts.push(baked, "");
+      continue;
+    }
+    const note = notes.find((n) => n.tag === rel.tag) ?? toReleaseNote(rel);
     const id = tagAnchor(rel.tag);
     parts.push(`## ${rel.tag} ${note.title} {#${id}}`, "");
     parts.push(`${note.dateLabel} 发布 · [官方原文](${rel.url})`, "");

@@ -6,7 +6,7 @@
  * Skips the write when the official top-3 tags already match src/lib/docs/releases.ts
  * so a hand-tuned Chinese page is not overwritten. Set FORCE_SYNC=1 to rewrite anyway.
  */
-import { writeFileSync } from "node:fs";
+import { writeFileSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { fetchDesktopReleases } from "../src/lib/docs/github-releases.ts";
@@ -42,7 +42,8 @@ async function main() {
   const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN || undefined;
   const releases = await fetchDesktopReleases({ token, limit: 3 });
   if (releases.length < 1) throw new Error("no desktop releases");
-  const notes = releases.map(toReleaseNote);
+  const existing = readFileSync(join(root, "src/content/zh/changelog.md"), "utf8");
+  const notes = releases.map((rel) => RELEASES.find((n) => n.tag === rel.tag) ?? toReleaseNote(rel));
   const prev = RELEASES.map((n) => n.tag).join(",");
   const next = notes.map((n) => n.tag).join(",");
   if (prev === next && process.env.FORCE_SYNC !== "1") {
@@ -50,7 +51,7 @@ async function main() {
     return;
   }
   writeFileSync(join(root, "src/lib/docs/releases.ts"), formatNotes(notes));
-  writeFileSync(join(root, "src/content/zh/changelog.md"), buildChangelogMarkdown(releases));
+  writeFileSync(join(root, "src/content/zh/changelog.md"), buildChangelogMarkdown(releases, existing, RELEASES));
   console.log("synced", next);
 }
 
