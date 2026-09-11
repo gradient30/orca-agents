@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { cn } from "@/lib/cn";
+import { MermaidBlock } from "./MermaidBlock";
 
 type Block =
   | { t: "h"; level: number; text: string; id: string }
@@ -277,7 +278,10 @@ export function Markdown({ source }: { source: string }) {
               ))}
             </blockquote>
           );
-        if (b.t === "code")
+        if (b.t === "code") {
+          if (b.lang.trim().toLowerCase() === "mermaid") {
+            return <MermaidBlock key={i} code={b.code} />;
+          }
           return (
             <pre
               key={i}
@@ -286,6 +290,7 @@ export function Markdown({ source }: { source: string }) {
               <code>{b.code}</code>
             </pre>
           );
+        }
         if (b.t === "img")
           return (
             <figure key={i} className="mt-6 overflow-hidden rounded-md border border-border bg-bg-elevated">

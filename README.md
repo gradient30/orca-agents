@@ -19,12 +19,14 @@
 | 官网 57 页 1:1 | 安装、工作树、Agent、CLI、评审、浏览器、远程……完整目录与英文锚点 `{#id}` |
 | [快速手册](src/content/zh/quick-guide.md) | 引导介绍、核心特性、日常高频：用法 / 真实示例 / 应用场景 / 价值收益 |
 | [更新日志](src/content/zh/changelog.md) | 打开时抓取官方最新三次 Release 的完整中文译本 |
+| [本站架构](src/content/zh/architecture.md) | 手册框架图、Release 数据更新驱动图 |
 
 常用入口：
 
 - `/` — 官网首页译本
 - `/docs/quick-guide` — 快速手册（QASai / qasai-probes 双仓执行+复核流程也写在这里）
 - `/docs/changelog` — 更新日志（顶栏「更新」进入）
+- `/docs/architecture` — 本站架构（框架图 + 数据更新驱动图）
 - `/docs/install`、`/docs/model/worktrees`、`/docs/agents/hibernation` 等与官网路径对齐
 
 ## 本地运行
@@ -56,7 +58,7 @@ npm run sync:releases
 
 ## 技术栈
 
-TanStack Start + Vite + Tailwind v4。正文是 `src/content/zh/**/*.md`，由 `src/lib/docs/catalog.ts` 建目录、`src/components/docs/Markdown.tsx` 渲染（标题 `{#english-id}`、表格、代码、哈希滚动）。
+TanStack Start + Vite + Tailwind v4。正文是 `src/content/zh/**/*.md`，由 `src/lib/docs/catalog.ts` 建目录、`src/components/docs/Markdown.tsx` 渲染（标题 `{#english-id}`、表格、代码、`mermaid` 架构图、哈希滚动）。
 
 ## 许可与归属
 

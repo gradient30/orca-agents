@@ -134,3 +134,14 @@ html[data-theme="color"] {
     transition-duration: 0.01ms !important;
   }
 }
+
+.mermaid-block svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.mermaid-block .nodeLabel,
+.mermaid-block .cluster-label,
+.mermaid-block .edgeLabel {
+  font-family: var(--font-sans);
+}
