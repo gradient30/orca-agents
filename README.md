@@ -2,7 +2,7 @@
 
 [Orca ADE](https://www.onorca.dev/docs) 官方文档的 1:1 中文手册站点，另附一份面向日常高频操作的「快速手册」。
 
-**在线阅读：** [https://gradient30.github.io/orca-agents/](https://gradient30.github.io/orca-agents/)
+**在线阅读：** [https://gradient30.github.io/orca-ade/](https://gradient30.github.io/orca-ade/)
 
 - 官方文档：[onorca.dev/docs](https://www.onorca.dev/docs)
 - 英文源：[stablyai/orca](https://github.com/stablyai/orca) `docs/site/content/docs`

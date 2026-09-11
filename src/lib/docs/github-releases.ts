@@ -17,7 +17,7 @@ export type LiveRelease = {
 };
 
 export const ORCA_RELEASES_API = "https://api.github.com/repos/stablyai/orca/releases?per_page=20";
-const UA = "orca-handbook (https://github.com/gradient30/orca-agents)";
+const UA = "orca-handbook (https://github.com/gradient30/orca-ade)";
 
 export function isDesktopRelease(r: GithubRelease): boolean {
   if (r.draft || r.prerelease) return false;

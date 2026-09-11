@@ -13,7 +13,7 @@ import { appEnvPlugin } from "./scripts/app-env-plugin.mjs";
 import { isMigrationFile } from "./scripts/migration-plan.mjs";
 
 const isPages = process.env.GITHUB_PAGES === "1";
-const pagesBase = isPages ? "/orca-agents/" : "/";
+const pagesBase = isPages ? "/orca-ade/" : "/";
 
 /** The files `src/lib/db.ts` globs — same directory, same non-recursive scope. */
 function hasGlobbedMigrations(root: string): boolean {
@@ -175,7 +175,7 @@ export default defineConfig(({ command, isPreview }) => ({
       isPages
         ? {
             spa: { enabled: true },
-            router: { basepath: "/orca-agents" },
+            router: { basepath: "/orca-ade" },
           }
         : {},
     ),
